@@ -24,6 +24,8 @@ Built to solve a concrete problem: forgetting half the shopping list.
 | Data | SQLite |
 | External API | Open Food Facts v2 |
 
+The frontend expects `VITE_BACKEND_URL` in `frontend/.env`.
+
 ## Architecture
 
 ```mermaid
@@ -82,10 +84,11 @@ Frontend:
 ```bash
 cd frontend
 npm install
+cp .env.example .env    # VITE_BACKEND_URL, default http://localhost:5000
 npm run dev
 ```
 
-Open the Vite URL and point the app at the backend (defaults to `http://localhost:5000`).
+Open the Vite URL. The frontend reads the backend address from `VITE_BACKEND_URL`.
 
 ## Structure
 
