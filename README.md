@@ -1,135 +1,111 @@
-<h1>KITCHEN MANAGER</h1>
-<h2>Video demo:</h2> <URL>
-<h2>Description</h2>
-Kitchen manager is a web app searching to make your life easier when managing your day to day inventory.
-<br>
-It allows you to scan items you have in your kitchen and input the quantity of that item that you currently have, and also the minimum quantity of that product that you always want to have.
-<i>
-    Example: You always want to have at least 6 litters of milk, you will then scan your milk's barcode, indicate how much you currently have and say that you want at least to have 6 litters of milk.
-</i>
-<br>
-Once all your items are scanned, you can continuously update your inventory, and when it's time to go shopping, an accurate shopping list will tell you what to buy and the quantities.
-This is useful if you easily forget things when shopping (my case).
-<hr>
-<h2>Pages</h2>
-The web has 3 pages
-<ul>
-    <li>
-        <b>Inventory: </b> Check your stock on current items, change the stock quantities and modify the minimum stock required.
-    </li>
-    <li>
-        <b>Scanner: </b> This page integrates a barcode scanner to add new items or check how much you have of some product.
-    </li>
-    <li>
-        <b>Shopping List: </b> This page shows what's lacking in your inventory for your next shopping session.
-    </li>
-</ul>
+<div align="center">
+  <img src="assets/cover.svg" alt="KitchenManager" width="100%">
+</div>
 
-<hr>
-<h2>Stack</h2>
-<ul>
-    <li> 
-        <b>Frontend: </b> React TS Framework, <a href="https://www.npmjs.com/package/html5-qrcode">html5-qrcode NPM package</a>.
-    </li>
-    <li> 
-        <b>Backend: </b> Flask, <a href="https://openfoodfacts.github.io/openfoodfacts-server/api/">Open Food Facts API</a>, SQLite3 Database.
-    </li>
-</ul>
-<hr>
-<h2>Frontend</h2>
-The frontend was made with React TS + React Router DOM.
-<br>
-It contains 3 main pages (already explained before).
-<br>
-It also contains 3 components. Product, Inventory Minimum and Inventory Modify, both of these last ones contained inside the first one.
-<br>
-<b>Product</b> is a component that shows the name, image and quantity per unit of a product, it also accepts props, toggling modification and shopping list view.
-Modification is what makes InventoryMinimum and InventoryModify components show up, and shopping list view simply tells the user how much of this product they must buy.
-<br>
-<b>Inventory Minimum</b> is simply an input and a button that sends the modification of minimum requisites for an item to the backend.
-<br>
-<b>Inventory Modify</b> are two buttons which allow adding or removing inventory quantities to items. They update the main Product component to show correctly how much of that product the user has.
+# KitchenManager
 
-<hr>
-<h2>Backend</h2>
-The backend uses Django and an SQLite Database.
-This choice was done to ensure the simplicity of the project, as a more complex database should not be required for this.
-<br>
-SQLite databases add a constraint which makes it impossible for two processes to connect to it at the same time, so proper connection opening and closing had to be done, to avoid getting concurrency errors.
-<h3>Auxiliary functions</h3>
-<ul>
-    <li>
-        <b>Add quantity: </b>
-        This function accepts the item barcode and adds or removes quantity from the database inventory.
-    </li>
-    <li>
-        <b>Delete product: </b>
-        This function accepts the item barcode and removes a product from the database.
-    </li>
-    <li>
-        <b>Get all products: </b>
-        This function returns all items in the database, their quantities and information. This function is used for the inventory page.
-    </li>
-    <li>
-        <b>Get product: </b>
-        This function returns an items in the database, it's quantity and information.
-    </li>
-    <li>
-        <b>Get product column: </b>
-        This function returns an items specific column in the database.
-    </li>
-    <li>
-        <b>Get shopping list: </b>
-        This function returns all items who have less quantity then the one specified in inventory minimum. This function is used for the shopping list page.
-    </li>
-    <li>
-        <b>Insert product: </b>
-        This function accepts a name, category, barcode, image and more info to insert the item in the database. Products are automatically inserted once they are scanned.
-    </li>
-    <li>
-        <b>Modify column: </b>
-        This function accepts a barcode and modifies the specified column with a certain value.
-    </li>
-    <li>
-        <b>Product is saved: </b>
-        This function checks if a product is already in the database.
-    </li>
-    <li>
-        <b>Product Serializer: </b>
-        This function accepts one or many products and converts it from the SQLite library format to a dict. This function is used in almost the entirety of the project to facilitate reading.
-    </li>
-</ul>
+A small web app for keeping track of what is in your kitchen. Scan a product's barcode, set how much you own and the minimum you always want, and get a shopping list that tells you what to buy and how much.
 
-<h3>Main function</h3>
-The main function is the one that handles all of the requests, it specifically has 3 endpoints: <code>/inventory</code>, <code>/shopping-list</code>, <code>/product/&lt;code&gt;</code>
-<ul>
-    <li>
-        <b>/inventory</b>
-        This endpoint returns all items in the inventory, and its info. It uses the getAllProducts function.
-    </li>
-    <li>
-        <b>/shopping-list</b>
-        This endpoint returns all items in the inventory, which have less quantity than the one required by the inventory minimum specification. It uses the getShoppingList function.
-    </li>
-    <li>
-        <b>/product</b>
-        <ul>
-            <li>
-                <b>GET: </b>
-                This method creates a new product by giving it the barcode. It accesses the <a href="https://openfoodfacts.github.io/openfoodfacts-server/api/">Open Food Facts API</a> and saves all the info inside the database. It then returns all the information. 
-            </li>
-            <li>
-                <b>POST: </b>
-                This method adds quantity to a product. It simply adds the quantity per unit every time this endpoint and method is hit.
-            </li>
-            <li>
-                <b>DELETE: </b>
-                This method remove quantity from a product. It does the inverse of the POST method. It makes sure no negative quantities are recorded in the database.
-            </li>
-            <li>
-                <b>PUT: </b>
-                This method allows you to modify the inventory minimum quantity.
-            </li>
-        </ul>
-    </li>
-</ul>
+Built to solve a concrete problem: forgetting half the shopping list.
+
+## What it does
+
+- **Inventory**: current quantity and minimum quantity per product, with images and categories from Open Food Facts.
+- **Scanner**: camera-based barcode scanning with `html5-qrcode` and Quagga2.
+- **Shopping list**: every product below its minimum, with the exact difference.
+- Products are fetched once from the Open Food Facts API and stored locally, so later lookups do not hit the network.
+
+## Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS 4, React Router |
+| Backend | Flask, flask-cors, requests |
+| Data | SQLite |
+| External API | Open Food Facts v2 |
+
+## Architecture
+
+```mermaid
+flowchart LR
+  UI["React SPA<br/>Inventory · Scanner · Shopping list"] -->|JSON| API["Flask API"]
+  API --> DB[("SQLite")]
+  API -->|first lookup| OFF["Open Food Facts API"]
+  OFF --> API
+```
+
+## Data model
+
+```mermaid
+erDiagram
+  PRODUCT {
+    int code PK
+    string name
+    string category
+    string unit
+    float quantity_per_item
+    int inventory_quantity
+    int inventory_minimum
+    string image
+  }
+```
+
+A product is identified by its EAN barcode. The shopping list is a query over `inventory_quantity < inventory_minimum`.
+
+## API
+
+| Method | Route | Purpose |
+|---|---|---|
+| `GET` | `/inventory` | All products with their stock |
+| `GET` | `/shopping-list` | Products below their minimum |
+| `GET` | `/product/<code>` | Fetch a product; downloads and stores it from Open Food Facts on first access |
+| `POST` | `/product/<code>` | Add one unit |
+| `DELETE` | `/product/<code>` | Remove one unit, never below zero |
+| `PUT` | `/product/<code>` | Set the minimum quantity |
+
+## Run it
+
+Requirements: Python 3.10+, Node.js 20+, npm.
+
+Backend:
+
+```bash
+cd backend
+python3 -m venv venv
+venv/bin/pip install -r requirements.txt
+venv/bin/python setupDB.py     # creates the SQLite database
+venv/bin/flask --app main run --port 5000
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open the Vite URL and point the app at the backend (defaults to `http://localhost:5000`).
+
+## Structure
+
+```
+backend/
+  main.py          Flask routes
+  functions/       One module per query or mutation
+  serializer/      Row-to-dict conversion
+  setupdb.sql      Schema
+frontend/
+  src/pages/       Inventory, Scanner, ShoppingList
+  src/components/  Product, InventoryModify, InventoryMinimum
+```
+
+## Notes
+
+- SQLite allows a single writer at a time, so connections are opened and closed per operation to avoid `database is locked` errors.
+- The scanner needs camera permission and a secure context (`localhost` or HTTPS).
+- Product data comes from Open Food Facts; missing or incomplete entries are shown as returned by the API.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
